@@ -105,78 +105,78 @@ class IncrementalGame extends Component<{}, IncrementalGameState> {
         </Pressable>
         <View>
 
-  <Pressable
-    onPress={() => this.buyBuilding('building1', 10, 1)}
-    style={[
-      styles.button,
-      this.state.gold < 10 ? styles.disabled_button : { backgroundColor: 'blue' },
-    ]}
-    disabled={this.state.gold < 10}
-  >
-    <Text
-      style={[
-        styles.white_text,        
-      ]}
-    >
-      {`Buy Building 1 (Cost: 10 Gold) (${this.state.building1})`}
-    </Text>
-  </Pressable>
-</View>
-<View>
-  <Pressable
-    onPress={() => this.buyBuilding('building2', 50, 5)}
-    style={[
-      styles.button,
-      this.state.gold < 50 ? styles.disabled_button : {},
-    ]}
-    disabled={this.state.gold < 50}
-  >
-    <Text
-      style={[
-        styles.white_text,        
-      ]}
-    >
-      {`Buy Building 2 (Cost: 50 Gold) (${this.state.building2})`}
-    </Text>
-  </Pressable>
-</View>
-<View>
-  <Pressable
-    onPress={() => this.buyBuilding('building3', 100, 10)}
-    style={[
-      styles.button,
-      this.state.gold < 100 ? styles.disabled_button : {},
-    ]}
-    disabled={this.state.gold < 100}
-  >
-    <Text
-      style={[
-        styles.white_text,        
-      ]}
-    >
-      {`Buy Building 3 (Cost: 100 Gold) (${this.state.building3})`}
-    </Text>
-  </Pressable>
-</View>
-<View>
-  <Pressable
-    onPress={this.winGame}
-    style={[
-      styles.button,
-      this.state.gold < 1000 ? styles.disabled_button : {},
-    ]}
-    disabled={this.state.gold < 1000}
-  >
-    <Text
-      style={[
-        styles.white_text,
-        this.state.gold < 1000 ? styles.disabled_button : {},
-      ]}
-    >
-      {`Win the Game (Cost: 1000 Gold)`}
-    </Text>
-  </Pressable>
-</View>
+          <Pressable
+            onPress={() => this.buyBuilding('building1', 10, 1)}
+            style={[
+              styles.button,
+              this.state.gold < 10 ? styles.disabled_button : { backgroundColor: 'blue' },
+            ]}
+            disabled={this.state.gold < 10}
+          >
+            <Text
+              style={[
+                styles.white_text,        
+              ]}
+            >
+              {`Buy Building 1 (Cost: 10 Gold) (${this.state.building1})`}
+            </Text>
+          </Pressable>
+        </View>
+        <View>
+          <Pressable
+            onPress={() => this.buyBuilding('building2', 50, 5)}
+            style={[
+              styles.button,
+              this.state.gold < 50 ? styles.disabled_button : {},
+            ]}
+            disabled={this.state.gold < 50}
+          >
+            <Text
+              style={[
+                styles.white_text,        
+              ]}
+            >
+              {`Buy Building 2 (Cost: 50 Gold) (${this.state.building2})`}
+            </Text>
+          </Pressable>
+        </View>
+        <View>
+          <Pressable
+            onPress={() => this.buyBuilding('building3', 100, 10)}
+            style={[
+              styles.button,
+              this.state.gold < 100 ? styles.disabled_button : {},
+            ]}
+            disabled={this.state.gold < 100}
+          >
+            <Text
+              style={[
+                styles.white_text,        
+              ]}
+            >
+              {`Buy Building 3 (Cost: 100 Gold) (${this.state.building3})`}
+            </Text>
+          </Pressable>
+        </View>
+        <View>
+          <Pressable
+            onPress={this.winGame}
+            style={[
+              styles.button,
+              this.state.gold < 1000 ? styles.disabled_button : {},
+            ]}
+            disabled={this.state.gold < 1000}
+          >
+            <Text
+              style={[
+                styles.white_text,
+                this.state.gold < 1000 ? styles.disabled_button : {},
+              ]}
+            >
+              {`Win the Game (Cost: 1000 Gold)`}
+            </Text>
+          </Pressable>
+        </View>
 
       </View>
     );

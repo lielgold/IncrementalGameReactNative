@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { initialize, requestPermission, readRecords} from 'react-native-health-connect';
 import IncrementalGame from './components/IncrementalGame';
+import HealthConnectComp from './components/HealthConnectComp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function getMidnightAsString():string{
@@ -26,6 +28,7 @@ function getMidnightAsString():string{
 export default function App() {
   const [result, setResult] = useState("readSampleData not called");
   const [err_log, setErrLog] = useState("err_log not set");
+  const [lastUpdate, setLastUpdate] = useState(new Date(1970, 0, 1));
 
   const readSampleData = async () => {
     try {
@@ -44,6 +47,7 @@ export default function App() {
       // request permissions
       const grantedPermissions = await requestPermission([
         { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+        //{ accessType: 'read', recordType: 'Steps' },
       ]);
 
       if(grantedPermissions.length===0){
@@ -93,7 +97,7 @@ export default function App() {
           error log:
           {err_log}
         </Text>
-      )}
+      )}      
       <IncrementalGame/>
     </View>
   );

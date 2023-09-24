@@ -25,7 +25,7 @@ interface HealthConnectCompState {
     err_log: string;
   }
 
-  class HealthConnectComp extends Component<{}, HealthConnectCompState> {
+class HealthConnectComp extends Component<{}, HealthConnectCompState> {
   constructor(props) {
     super(props);
 
@@ -94,22 +94,20 @@ interface HealthConnectCompState {
   render() {
     return (
       <View style={styles.container}>
-        <Pressable style={styles.button} onPress={this.readSampleData}>
-          <Text style={styles.white_text}>Read Sample Data</Text>
-        </Pressable>
+          <Pressable style={styles.button} onPress={this.readSampleData}>
+            <Text style={styles.white_text}>Read Sample Data</Text>
+          </Pressable>
 
-        {this.state.result && (
           <Text style={{ marginTop: 10 }}>
             Result:
             {this.state.result}
           </Text>
-        )}
-        {this.state.err_log && (
+          
           <Text style={{ marginTop: 10 }}>
             Error Log:
             {this.state.err_log}
           </Text>
-        )}
+          
       </View>
     );
   }

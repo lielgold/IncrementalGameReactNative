@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { initialize, requestPermission, readRecords} from 'react-native-health-connect';
+import IncrementalGame from './components/IncrementalGame';
 
 
 function getMidnightAsString():string{
@@ -92,7 +93,8 @@ export default function App() {
           error log:
           {err_log}
         </Text>
-      )}      
+      )}
+      <IncrementalGame/>
     </View>
   );
 }

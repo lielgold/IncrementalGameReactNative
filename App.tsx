@@ -15,13 +15,11 @@ export default function App() {
       // initialize the client
       const isInitialized = await initialize();
 
-      if(isInitialized){
-        //setErrLog(prv_err => prv_err + "initilization worked + ");
-        setErrLog("initilization worked + ");
+      if(isInitialized){        
+        setErrLog(prv_err => prv_err + "initilization worked + ");
       }
-      else{
-        //setErrLog(prv_err => prv_err + "initilization didn't work + ");
-        setErrLog("initilization didn't work + ");
+      else{        
+        setErrLog(prv_err => prv_err + "initilization didn't work + ");
       }
     
       // request permissions
@@ -49,8 +47,8 @@ export default function App() {
       setResult(JSON.stringify(result, null, 2));      
     }
     catch (error) {
-      setResult("error reading data - " + error);
-      setErrLog(prv_err => prv_err + "no data received + ");
+      setResult("no data received");
+      setErrLog(prv_err => prv_err + " " + error);
     }
   };  
 

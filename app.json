@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "incremental hc game2",
+    "slug": "incremental_hc_game2",
+    "plugins": [
+      [
+        "react-native-health-connect"
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "minSdkVersion": 26
+          }
+        }
+      ]
+    ],
+    "android": {
+      "permissions": [
+        "android.permission.health.READ_STEPS",
+        "android.permission.health.READ_ACTIVE_CALORIES_BURNED"
+      ],
+      "package": "com.oj5uky7xeu.incremental_hc_game2"
+    }
+  }
+}

@@ -1,8 +1,26 @@
 
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button} from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { initialize, requestPermission, readRecords} from 'react-native-health-connect';
+
+
+function getMidnightAsString():string{
+  // Get the current date
+  const currentDate = new Date();
+
+  // Set the start time to today at 00:00:00
+  const start_time = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(), // Day of the month
+    0, // Hours (midnight)
+    0, // Minutes
+    0, // Seconds
+    0 // Milliseconds
+  );
+  return start_time.toISOString();
+}
 
 export default function App() {
   const [result, setResult] = useState("readSampleData not called");
@@ -34,13 +52,15 @@ export default function App() {
         setErrLog(prv_err => prv_err + "permission granted + ");
       }
 
+      const start_time = getMidnightAsString();
+      const end_time = new Date().toISOString();
     
       // check if granted  
       const result = await readRecords('ActiveCaloriesBurned', {
         timeRangeFilter: {
           operator: 'between',
-          startTime: '2023-01-09T12:00:00.405Z',
-          endTime: '2023-01-09T23:53:15.405Z',
+          startTime: start_time,
+          endTime: end_time,
         },
       });
       // Set the result in the state
@@ -57,7 +77,10 @@ export default function App() {
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <Text>Test</Text>
-      <Button title="Read Sample Data" onPress={readSampleData} />
+      <Pressable style={styles.button} onPress={readSampleData}>
+        <Text style={styles.white_text}>Read Sample Data</Text>
+      </Pressable>
+
       {result && (
         <Text style={{ marginTop: 10 }}>
           Result:
@@ -81,6 +104,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: 'blue',
+  },
+  white_text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+  },  
 });
 
 

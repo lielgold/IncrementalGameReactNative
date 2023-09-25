@@ -1,9 +1,12 @@
-import React, { Component } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
 
-import { initialize, requestPermission, readRecords } from 'react-native-health-connect';
+import { initialize, requestPermission, readRecords} from 'react-native-health-connect';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function getMidnightAsString(): string {
+
+function getMidnightDate():Date{
   // Get the current date
   const currentDate = new Date();
 
@@ -14,61 +17,86 @@ function getMidnightAsString(): string {
     currentDate.getDate(), // Day of the month
     0, // Hours (midnight)
     0, // Minutes
-    0, // Seconds
+    1, // Seconds
     0 // Milliseconds
   );
-  return start_time.toISOString();
+  return start_time;
 }
 
-interface HealthConnectCompState {
-    result: string;
-    err_log: string;
-  }
+export default function HealthConnectComp() {
+  const [result, setResult] = useState("readSampleData not called");
+  const [err_log, setErrLog] = useState("err_log not set");
+  const [lastUpdate, setLastUpdate] = useState(new Date(1970, 0, 1));
 
-class HealthConnectComp extends Component<{}, HealthConnectCompState> {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      result: "readSampleData not called",
-      err_log: "err_log not set",
-    };
-  }
-
-  componentDidMount() {
-    // Call readSampleData when the component mounts
-    this.readSampleData();
-  }
-
-  async readSampleData() {
+  const saveStateData = async () => {
     try {
-      this.setErrLog("before initialization + ");
+      await AsyncStorage.setItem('lastUpdate', JSON.stringify(lastUpdate));
+    } catch (error) {
+      console.error('Error saving game data:', error);
+    }
+  };  
+
+  const loadStateData = async () => {
+    try {
+      const savedData = await AsyncStorage.getItem('lastUpdate');
+      if (savedData) {
+        const parsedData = new Date(JSON.parse(savedData));
+        if (!isNaN(parsedData.getTime())) {
+          // Check if parsedData is a valid Date object
+          setLastUpdate(parsedData);
+        } else {
+          console.error('Invalid date format in LastUpdate saved data.');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading state data:', error);
+    }
+  };  
+
+  useEffect(() => {
+    loadStateData();
+  }, []);  
+
+  const readSampleData = async () => {
+    try {
+      setErrLog("before initilization + ");      
+
+      var start_time_date = getMidnightDate();
+
+      //get time from latest update, or from midnight
+      // if (lastUpdate>start_time_date){
+      //   start_time_date = lastUpdate;
+      // }
+      
+      const start_time = start_time_date.toISOString();
+      const end_time = new Date().toISOString();
 
       // initialize the client
       const isInitialized = await initialize();
 
-      if (isInitialized) {
-        this.setErrLog(prevErr => prevErr + "initialization worked + ");
-      } else {
-        this.setErrLog(prevErr => prevErr + "initialization didn't work + ");
+      if(isInitialized){        
+        setErrLog(prv_err => prv_err + "initilization worked + ");
       }
-
+      else{        
+        setErrLog(prv_err => prv_err + "initilization didn't work + ");
+      }
+    
       // request permissions
       const grantedPermissions = await requestPermission([
-        { accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+        //{ accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+        { accessType: 'read', recordType: 'Steps' },
       ]);
 
-      if (grantedPermissions.length === 0) {
-        this.setErrLog(prevErr => prevErr + "no permission granted + ");
-      } else {
-        this.setErrLog(prevErr => prevErr + "permission granted + ");
+      if(grantedPermissions.length===0){
+        setErrLog(prv_err => prv_err + "no permission granted + ");
+      }      
+      else{
+        setErrLog(prv_err => prv_err + "permission granted + ");
       }
-
-      const start_time = getMidnightAsString();
-      const end_time = new Date().toISOString();
-
-      // check if granted
-      const data = await readRecords('ActiveCaloriesBurned', {
+    
+      // check if granted        
+      //const result = await readRecords('ActiveCaloriesBurned', {
+      const result = await readRecords('Steps', {
         timeRangeFilter: {
           operator: 'between',
           startTime: start_time,
@@ -76,44 +104,39 @@ class HealthConnectComp extends Component<{}, HealthConnectCompState> {
         },
       });
       // Set the result in the state
-      this.setResult(JSON.stringify(data, null, 2));
-    } catch (error) {
-      this.setResult("no data received");
-      this.setErrLog(prevErr => prevErr + " " + error);
+      setResult(JSON.stringify(result, null, 2));  
+      await saveStateData();    
     }
-  }
+    catch (error) {
+      setResult("no data received");
+      setErrLog(prv_err => prv_err + " " + error);
+    }
+  };  
 
-  setErrLog = (log) => {
-    this.setState({ err_log: log });
-  };
 
-  setResult = (result) => {
-    this.setState({ result });
-  };
+  return (
+    <View style={styles.container}>
+      <Pressable style={styles.button} onPress={readSampleData}>
+        <Text style={styles.white_text}>Read Sample Data</Text>
+      </Pressable>      
 
-  render() {
-    return (
-      <View style={styles.container}>
-          <Pressable style={styles.button} onPress={this.readSampleData}>
-            <Text style={styles.white_text}>Read Sample Data</Text>
-          </Pressable>
+      {result && (
+        <Text style={{ marginTop: 10 }}>
+          Result:
+          {result}
+        </Text>
+      )}      
+      {err_log && (
+        <Text style={{ marginTop: 10 }}>
+          error log:
+          {err_log}
+        </Text>
+      )}
 
-          <Text style={{ marginTop: 10 }}>
-            Result:
-            {this.state.result}
-          </Text>
-          
-          <Text style={{ marginTop: 10 }}>
-            Error Log:
-            {this.state.err_log}
-          </Text>
-          
-      </View>
-    );
-  }
+      <Text style={{ marginTop: 10 }}>Last Update: {lastUpdate.toTimeString()}</Text>
+    </View>
+  );
 }
-
-export default HealthConnectComp;
 
 const styles = StyleSheet.create({
   container: {
@@ -137,5 +160,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
-  },
+  },  
 });
+
+

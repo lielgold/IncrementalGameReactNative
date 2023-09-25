@@ -23,7 +23,7 @@ function getMidnightDate():Date{
   return start_time;
 }
 
-export default function HealthConnectComp() {
+export default function HealthConnectComp({ addGoldFunction }) {
   const [result, setResult] = useState("readSampleData not called");
   const [err_log, setErrLog] = useState("err_log not set");
   const [lastUpdate, setLastUpdate] = useState(new Date(1970, 0, 1));
@@ -34,32 +34,33 @@ export default function HealthConnectComp() {
     } catch (error) {
       console.error('Error saving game data:', error);
     }
-  };  
+  };
 
-  const loadStateData = async () => {
-    try {
-      const savedData = await AsyncStorage.getItem('lastUpdate');
-      if (savedData) {
-        const parsedData = new Date(JSON.parse(savedData));
-        if (!isNaN(parsedData.getTime())) {
-          // Check if parsedData is a valid Date object
-          setLastUpdate(parsedData);
-        } else {
-          console.error('Invalid date format in LastUpdate saved data.');
-        }
-      }
-    } catch (error) {
-      console.error('Error loading state data:', error);
-    }
-  };  
-
+  
   useEffect(() => {
+    const loadStateData = async () => {
+      try {
+        const savedData = await AsyncStorage.getItem('lastUpdate');
+        if (savedData) {
+          const parsedData = new Date(JSON.parse(savedData));
+          if (!isNaN(parsedData.getTime())) {
+            // Check if parsedData is a valid Date object
+            setLastUpdate(parsedData);
+          } else {
+            console.error('Invalid date format in LastUpdate saved data.');
+          }
+        }
+      } catch (error) {
+        console.error('Error loading state data:', error);
+      }
+    };  
+
     loadStateData();
   }, []);  
 
   const readSampleData = async () => {
     try {
-      setErrLog("before initilization + ");      
+      setErrLog("before initilization + ");       
 
       var start_time_date = getMidnightDate();
 
@@ -103,9 +104,11 @@ export default function HealthConnectComp() {
           endTime: end_time,
         },
       });
+      
       // Set the result in the state
       setResult(JSON.stringify(result, null, 2));  
       await saveStateData();    
+      //addGoldFunction(new_number_of_steps)
     }
     catch (error) {
       setResult("no data received");

@@ -3,16 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import IncrementalGame from './components/IncrementalGame';
-import HealthConnectComp from './components/HealthConnectComp';
-
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <Text>Test</Text>
-      <HealthConnectComp/>
-      <IncrementalGame/>
+    <View style={styles.container}>  
+        <Text>Open up App.tsx to start working on your app!</Text>
+        <Text>Test</Text>
+        {/* <HealthConnectComp/> */}
+        <IncrementalGame/>
     </View>
   );
 }

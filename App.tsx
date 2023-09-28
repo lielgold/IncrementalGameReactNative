@@ -7,9 +7,7 @@ import IncrementalGame from './components/IncrementalGame';
 export default function App() {
   return (
     <View style={styles.container}>  
-        <Text>Open up App.tsx to start working on your app!</Text>
-        <Text>Test</Text>
-        {/* <HealthConnectComp/> */}
+        <Text style={{marginBottom: 10}}>Walk to get gold.</Text>        
         <IncrementalGame/>
     </View>
   );

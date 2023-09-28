@@ -27,10 +27,12 @@ export default function HealthConnectComp({ addGoldFunction }) {
   const [result, setResult] = useState("readSampleData not called");
   const [err_log, setErrLog] = useState("err_log not set");
   const [lastUpdate, setLastUpdate] = useState(new Date(1970, 0, 1));
+  const [stepSum, setStepSum] = useState(0);
 
   const saveStateData = async () => {
     try {
       await AsyncStorage.setItem('lastUpdate', JSON.stringify(lastUpdate));
+      await AsyncStorage.setItem('stepSum', JSON.stringify(stepSum));
     } catch (error) {
       console.error('Error saving game data:', error);
     }
@@ -42,13 +44,23 @@ export default function HealthConnectComp({ addGoldFunction }) {
       try {
         const savedData = await AsyncStorage.getItem('lastUpdate');
         if (savedData) {
-          const parsedData = new Date(JSON.parse(savedData));
-          if (!isNaN(parsedData.getTime())) {
+          const parsedDate = new Date(JSON.parse(savedData));
+          if (!isNaN(parsedDate.getTime())) {
             // Check if parsedData is a valid Date object
-            setLastUpdate(parsedData);
+            setLastUpdate(parsedDate);
           } else {
             console.error('Invalid date format in LastUpdate saved data.');
           }
+
+          const savedStepSum = await AsyncStorage.getItem('stepSum');
+          if (savedStepSum !== null) {
+            // Parse the savedStepSum to a number
+            const parsedStepSum = JSON.parse(savedStepSum);
+            setStepSum(parsedStepSum);
+          }
+          else{
+            console.error('Problem loading stepSum.');            
+          }        
         }
       } catch (error) {
         console.error('Error loading state data:', error);
@@ -60,14 +72,15 @@ export default function HealthConnectComp({ addGoldFunction }) {
 
   const readSampleData = async () => {
     try {
-      setErrLog("before initilization + ");       
+      setErrLog("before initilization + ");  
 
-      var start_time_date = getMidnightDate();
+      var start_time_date = new Date()//getMidnightDate();
+      //start_time_date.setDate(start_time_date.getDate());
 
       //get time from latest update, or from midnight
-      // if (lastUpdate>start_time_date){
-      //   start_time_date = lastUpdate;
-      // }
+      if (lastUpdate>start_time_date){
+        start_time_date = lastUpdate;
+      }
       
       const start_time = start_time_date.toISOString();
       const end_time = new Date().toISOString();
@@ -104,11 +117,21 @@ export default function HealthConnectComp({ addGoldFunction }) {
           endTime: end_time,
         },
       });
-      
+
+      // sum the steps in the results
+      var sum_steps = 0;
+      for (var i = 0; i < result.length; i++) {
+        sum_steps += result[i].count;
+      }
+            
       // Set the result in the state
       setResult(JSON.stringify(result, null, 2));  
-      await saveStateData();    
-      //addGoldFunction(new_number_of_steps)
+      setStepSum(prevStepSum => prevStepSum + sum_steps);      
+      
+      addGoldFunction(sum_steps);
+      setLastUpdate(new Date());
+
+      await saveStateData();          
     }
     catch (error) {
       setResult("no data received");
@@ -120,23 +143,25 @@ export default function HealthConnectComp({ addGoldFunction }) {
   return (
     <View style={styles.container}>
       <Pressable style={styles.button} onPress={readSampleData}>
-        <Text style={styles.white_text}>Read Sample Data</Text>
+        <Text style={styles.white_text}>Update Step Count</Text>
       </Pressable>      
 
-      {result && (
-        <Text style={{ marginTop: 10 }}>
-          Result:
-          {result}
-        </Text>
-      )}      
-      {err_log && (
+      <Text style={{ marginTop: 10 }}>Total Steps: {stepSum.toString()}</Text>
+      <Text style={{ marginTop: 10 }}>Last Update: {lastUpdate.toTimeString()}</Text>      
+
+      {/* {err_log && (
         <Text style={{ marginTop: 10 }}>
           error log:
           {err_log}
         </Text>
-      )}
+      )}       */}
 
-      <Text style={{ marginTop: 10 }}>Last Update: {lastUpdate.toTimeString()}</Text>
+      {/* {result && (
+        <Text style={{ marginTop: 10 }}>
+          Result:
+          {result}
+        </Text>
+      )}       */}
     </View>
   );
 }
@@ -165,5 +190,3 @@ const styles = StyleSheet.create({
     color: 'white',
   },  
 });
-
-

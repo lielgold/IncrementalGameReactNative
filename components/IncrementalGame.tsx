@@ -52,7 +52,8 @@ class IncrementalGame extends Component<{}, IncrementalGameState> {
 
   // add gold that equals to 1 + how_much_to_add * number of buildings 
   addGold = (how_much_gold_to_add = 1) => {
-    this.setState((prevState) => ({
+    console.log("inside addGold: " + how_much_gold_to_add);
+    this.setState((prevState) => ({      
       gold:
         prevState.gold +
         1 +
@@ -103,6 +104,7 @@ class IncrementalGame extends Component<{}, IncrementalGameState> {
     return (
       <View>
         <HealthConnectComp addGoldFunction={this.addGold} />
+        
         <Text>
           Gold: {this.state.gold}, GPS:{' '}
           {1 +
@@ -110,14 +112,15 @@ class IncrementalGame extends Component<{}, IncrementalGameState> {
             this.state.building2 * 2 +
             this.state.building3 * 3}
         </Text>
-        <Pressable
+        
+        {/* <Pressable
           onPress={() => this.addGold()}
           style={[styles.button, { backgroundColor: 'blue' }]}
         >
-          <Text style={styles.white_text}>Click for Gold</Text>
-        </Pressable>
-        <View>
+        <Text style={styles.white_text}>Click for Gold</Text>
+        </Pressable> */}
 
+        <View>
           <Pressable
             onPress={() => this.buyBuilding('building1', this.getCostBuilding1())}
             style={[

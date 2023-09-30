@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable, ScrollView } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
 import { initialize, requestPermission, readRecords} from 'react-native-health-connect';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,7 +28,9 @@ export default function HealthConnectComp({ addGoldFunction }) {
   const [result, setResult] = useState("readSampleData not called");
   const [err_log, setErrLog] = useState("err_log not set");
   const [lastUpdate, setLastUpdate] = useState(new Date(1970, 0, 1));
-  const [stepSum, setStepSum] = useState(0);
+  const [stepSum, setStepSum] = useState(0);  
+  const [selectedDaysNumber, setSelectedDaysNumber] = useState(0); // the step count will be in the time interval of date.now() - selectedDaysNumber 
+
 
   const saveStateData = async () => {
     try {
@@ -36,7 +39,7 @@ export default function HealthConnectComp({ addGoldFunction }) {
     } catch (error) {
       console.error('Error saving game data:', error);
     }
-  };
+  }; 
 
   
   useEffect(() => {
@@ -74,14 +77,18 @@ export default function HealthConnectComp({ addGoldFunction }) {
     try {
       setErrLog("before initilization + ");  
 
-      var start_time_date = new Date()//getMidnightDate();
-      //start_time_date.setDate(start_time_date.getDate());
+      var start_time_date = getMidnightDate(); //new Date()      
 
       //get time from latest update, or from midnight
-      if (lastUpdate>start_time_date){
-        start_time_date = lastUpdate;
-      }
+      // if (lastUpdate>start_time_date){
+      //   start_time_date = lastUpdate;
+      // }      
       
+      start_time_date.setDate(start_time_date.getDate() - selectedDaysNumber);      
+
+      console.log(start_time_date.toISOString());
+      console.log(new Date().toISOString());
+
       const start_time = start_time_date.toISOString();
       const end_time = new Date().toISOString();
 
@@ -96,8 +103,7 @@ export default function HealthConnectComp({ addGoldFunction }) {
       }
     
       // request permissions
-      const grantedPermissions = await requestPermission([
-        //{ accessType: 'read', recordType: 'ActiveCaloriesBurned' },
+      const grantedPermissions = await requestPermission([        
         { accessType: 'read', recordType: 'Steps' },
       ]);
 
@@ -139,9 +145,24 @@ export default function HealthConnectComp({ addGoldFunction }) {
     }
   };  
 
-
   return (
-    <View style={styles.container}>
+    <View >
+
+      <Text>How many days back to include in the count:</Text>
+      <Picker 
+        style={{ marginBottom: 10 }}
+        selectedValue={selectedDaysNumber}
+        onValueChange={(itemValue, itemIndex) => {
+          console.log(itemValue);
+          setSelectedDaysNumber(itemValue);          
+        }
+          
+        }>
+        {Array.from({ length: 15 }, (_, index) => (
+          <Picker.Item label={index.toString()} value={index} key={index} />
+        ))}
+      </Picker>
+
       <Pressable style={styles.button} onPress={readSampleData}>
         <Text style={styles.white_text}>Update Step Count</Text>
       </Pressable>      
@@ -149,19 +170,18 @@ export default function HealthConnectComp({ addGoldFunction }) {
       <Text style={{ marginTop: 10 }}>Total Steps: {stepSum.toString()}</Text>
       <Text style={{ marginTop: 10 }}>Last Update: {lastUpdate.toTimeString()}</Text>      
 
-      {/* {err_log && (
-        <Text style={{ marginTop: 10 }}>
-          error log:
-          {err_log}
-        </Text>
-      )}       */}
+      <Text style={{ marginTop: 10 }}>error log: {err_log}</Text>
 
-      {/* {result && (
-        <Text style={{ marginTop: 10 }}>
-          Result:
-          {result}
-        </Text>
-      )}       */}
+      <ScrollView>
+        <ScrollView
+          horizontal={false} // Enable vertical scrolling inside the outer ScrollView
+        >
+          <View style={{ margin: 20, padding: 10, backgroundColor: 'lightgray', width: 400 }}>
+            <Text>Result: {result}</Text>
+          </View>
+        </ScrollView>
+      </ScrollView>
+      
     </View>
   );
 }

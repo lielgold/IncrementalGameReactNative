@@ -19,8 +19,7 @@
     ],
     "android": {
       "permissions": [
-        "android.permission.health.READ_STEPS",
-        "android.permission.health.READ_ACTIVE_CALORIES_BURNED"
+        "android.permission.health.READ_STEPS"        
       ],
       "package": "com.oj5uky7xeu.incremental_hc_game2"
     },

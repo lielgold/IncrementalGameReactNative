@@ -77,17 +77,15 @@ export default function HealthConnectComp({ addGoldFunction }) {
     try {
       setErrLog("before initilization + ");  
 
-      var start_time_date = getMidnightDate(); //new Date()      
+      var start_time_date = getMidnightDate();
 
+      // this needs to be uncommented for updates to work properly in terms of the game
       //get time from latest update, or from midnight
       // if (lastUpdate>start_time_date){
       //   start_time_date = lastUpdate;
       // }      
       
       start_time_date.setDate(start_time_date.getDate() - selectedDaysNumber);      
-
-      console.log(start_time_date.toISOString());
-      console.log(new Date().toISOString());
 
       const start_time = start_time_date.toISOString();
       const end_time = new Date().toISOString();
@@ -145,12 +143,16 @@ export default function HealthConnectComp({ addGoldFunction }) {
     }
   };  
 
+  
+
   return (
     <View >
+      <Pressable style={styles.button} onPress={readSampleData}>
+        <Text style={styles.white_text}>Update Step Count</Text>
+      </Pressable>      
 
       <Text>How many days back to include in the count:</Text>
       <Picker 
-        style={{ marginBottom: 10 }}
         selectedValue={selectedDaysNumber}
         onValueChange={(itemValue, itemIndex) => {
           console.log(itemValue);
@@ -161,26 +163,15 @@ export default function HealthConnectComp({ addGoldFunction }) {
         {Array.from({ length: 15 }, (_, index) => (
           <Picker.Item label={index.toString()} value={index} key={index} />
         ))}
-      </Picker>
+      </Picker>      
 
-      <Pressable style={styles.button} onPress={readSampleData}>
-        <Text style={styles.white_text}>Update Step Count</Text>
-      </Pressable>      
+      <Text>Total Steps: {stepSum.toString()}</Text>
+      <Text>Last Update: {lastUpdate.toTimeString()}</Text>      
 
-      <Text style={{ marginTop: 10 }}>Total Steps: {stepSum.toString()}</Text>
-      <Text style={{ marginTop: 10 }}>Last Update: {lastUpdate.toTimeString()}</Text>      
+      <Text>error log: {err_log}</Text>
 
-      <Text style={{ marginTop: 10 }}>error log: {err_log}</Text>
-
-      <ScrollView>
-        <ScrollView
-          horizontal={false} // Enable vertical scrolling inside the outer ScrollView
-        >
-          <View style={{ margin: 20, padding: 10, backgroundColor: 'lightgray', width: 400 }}>
-            <Text>Result: {result}</Text>
-          </View>
-        </ScrollView>
-      </ScrollView>
+      {/* Result needs to be commented out */}
+      <Text>Result: {result}</Text>
       
     </View>
   );

@@ -19,10 +19,14 @@
     ],
     "android": {
       "permissions": [
-        "android.permission.health.READ_STEPS",
-        "android.permission.health.READ_ACTIVE_CALORIES_BURNED"
+        "android.permission.health.READ_STEPS"        
       ],
       "package": "com.oj5uky7xeu.incremental_hc_game2"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "792c0c5f-a044-4f60-a6ce-3140313256f3"
+      }
     }
   }
 }

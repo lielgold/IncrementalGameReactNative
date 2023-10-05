@@ -1,36 +1,19 @@
-# TypeScript Example
+# Incremental walking game
 
-<p>
-  <!-- iOS -->
-  <img alt="Supports Expo iOS" longdesc="Supports Expo iOS" src="https://img.shields.io/badge/iOS-4630EB.svg?style=flat-square&logo=APPLE&labelColor=999999&logoColor=fff" />
-  <!-- Android -->
-  <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat-square&logo=ANDROID&labelColor=A4C639&logoColor=fff" />
-  <!-- Web -->
-  <img alt="Supports Expo Web" longdesc="Supports Expo Web" src="https://img.shields.io/badge/web-4630EB.svg?style=flat-square&logo=GOOGLE-CHROME&labelColor=4285F4&logoColor=fff" />
-</p>
+Incremental game where walking progresse the game, rather than clicking or waiting for time to pass. Made in React Native, supported by Health Connect rather than Google Fit, so it either requires a phone with Android 14, or installing the [Health Connect app](https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata&hl=en&gl=US).
 
-```sh
-npx create-react-native-app -t with-typescript
-```
+## Requirements
 
-TypeScript is a superset of JavaScript which gives you static types and powerful tooling in Visual Studio Code including autocompletion and useful inline warnings for type errors.
+To run this game, you'll need the following dependencies:
 
-## 🚀 How to use
+- [React Native Health Connect](https://github.com/matinzd/react-native-health-connect)
+- expo-build-properties
 
-#### Creating a new project
+## Health Connect Permissions
 
-- Install the CLI: `npm i -g expo-cli`
-- Create a project: `npx create-react-native-app -t with-typescript`
-- `cd` into the project
+The game gets data on the number of steps made by the player from Health Connect. In the app there are two permission options:
+1. Grant permissions to Google Fit: With this option, the game works as expected, and data is up to date.
+2. Grant only step data permissions: Choosing this option may result in less up-to-date data, usually delayed by a couple of days.
 
-### Adding TypeScript to existing projects
 
-- Create a blank TypeScript config: `touch tsconfig.json`
-- Run `yarn start` or `npm run start` to automatically configure TypeScript
-- Rename files to TypeScript, `.tsx` for React components and `.ts` for plain typescript files
-
-> 💡 You can disable the TypeScript setup in Expo CLI with the environment variable `EXPO_NO_TYPESCRIPT_SETUP=1 expo start`
-
-## 📝 Notes
-
-- [Expo TypeScript guide](https://docs.expo.dev/versions/latest/guides/typescript/)
+[Link to an unsigned APK](https://drive.google.com/file/d/1DEnhvZJl1aSD7N0dokGB3Dbcthdi3MTV/view?usp=sharing)

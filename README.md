@@ -12,7 +12,7 @@ To run this game, you'll need the following dependencies:
 ## Health Connect Permissions
 
 The game gets data on the number of steps made by the player from Health Connect. In the app there are two permission options:
-1. Grant permissions to Google Fit: With this option, the game works as expected, and data is up to date.
+1. Grant permissions to Google Fit: With this option, the game works as expected, and the data is up to date.
 2. Grant only step data permissions: Choosing this option may result in less up-to-date data, usually delayed by a couple of days.
 
 
